@@ -1,7 +1,7 @@
 # .github/metadata.yaml
 description: "Dictionary.Ordered — an insertion-ordered hash dictionary generic over its storage column; preserves insertion order with O(1) average-case lookup."
 topics:
-  - primitives
+  - molecules
   - dictionary
 homepage: "https://swift-institute.org"
 readme:

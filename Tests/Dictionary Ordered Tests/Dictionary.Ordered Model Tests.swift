@@ -1,13 +1,13 @@
-import Buffer_Primitives_Test_Support
-import Column_Primitives
-import Dictionary_Ordered_Primitives
+import Buffer_Test_Support
+import Column
+import Dictionary_Ordered
 import Dictionary_Primitive
-import Hash_Primitives
-import Hash_Table_Primitives_Test_Support
-import Index_Primitives
-import Ordinal_Primitives_Standard_Library_Integration
+import Hash
+import Hash_Table_Test_Support
+import Index
+import Ordinal_Standard_Library_Integration
 import Ownership_Shared_Primitive
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 private typealias EntryColumn<K: Hash.Key & ~Copyable, V: ~Copyable> =

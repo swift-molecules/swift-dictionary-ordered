@@ -1,7 +1,7 @@
-# Dictionary Ordered Primitives
+# Dictionary Ordered
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-dictionary-ordered-primitives/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-dictionary-ordered-primitives/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-dictionary-ordered/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-dictionary-ordered/actions/workflows/ci.yml)
 
 `Dictionary<S>.Ordered` — the order-preserving dictionary discipline over an ordered-hashed storage **column**. The column-generic sibling of `Dictionary<S>`: it preserves insertion order and exposes it as **positions** (insertion-order ranks), so entries are addressable by key *and* by position, alongside the full keyed surface. Copyability flows from the column — move-only by default, copy-on-write via a `Shared` column.
 
@@ -19,12 +19,12 @@
 ## Quick Start
 
 ```swift
-import Dictionary_Ordered_Primitives
+import Dictionary_Ordered
 import Dictionary_Primitive
-import Hash_Primitives
+import Hash
 import Hash_Indexed_Primitive
-import Column_Primitives
-import Hash_Primitives_Standard_Library_Integration
+import Column
+import Hash_Standard_Library_Integration
 
 // Move-only by default, over the ordered-hashed entry column:
 var priorities = Dictionary<Hash.Indexed<Column.Heap<Hash.Entry<String, Int>>>>.Ordered()
@@ -49,7 +49,7 @@ priorities.withMutableValue(at: .zero) { $0 += 1 }       // .zero = the oldest e
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-dictionary-ordered.git", branch: "main")
 ]
 ```
 
@@ -57,7 +57,7 @@ dependencies: [
 .target(
     name: "App",
     dependencies: [
-        .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives")
+        .product(name: "Dictionary Ordered", package: "swift-dictionary-ordered")
     ]
 )
 ```
@@ -70,7 +70,7 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 | Product | Contents | When to import |
 |---------|----------|----------------|
-| `Dictionary Ordered Primitives` | Umbrella — `Dictionary.Ordered` with its keyed + positional doors and conformances | Most consumers |
+| `Dictionary Ordered` | Umbrella — `Dictionary.Ordered` with its keyed + positional doors and conformances | Most consumers |
 | `Dictionary Ordered Primitive` | The `Dictionary.Ordered` value type and the ordered index domain, without the conformances | Move-only / minimal-surface use |
 
 `Dictionary<S>.Ordered` composes the same ordered-hashed entry column as the base `Dictionary<S>` — `Hash.Indexed<Dense>` with key-projected `Hash.Entry<Key, Value>` elements, entries dense in insertion order. Positions *are* the dense slots, so positional access is O(1) and `index(forKey:)` is the engine's O(1)-average projected-key probe. The base `Dictionary<S>` contract is keyed; `Ordered` is where the positional promise lives.
@@ -102,9 +102,9 @@ Position `0` is the oldest live entry; updating an existing key keeps its rank; 
 
 ## Related Packages
 
-- [`swift-dictionary-primitives`](https://github.com/swift-primitives/swift-dictionary-primitives) — the base `Dictionary<S>` ADT and the `Hash.Entry` element vocabulary.
-- [`swift-hash-table-primitives`](https://github.com/swift-primitives/swift-hash-table-primitives) — the `Hash.Indexed` position-index engine the entry column is built on.
-- [`swift-column-primitives`](https://github.com/swift-primitives/swift-column-primitives) — the column vocabulary (`Hash.Indexed`, `Column.Heap`, …) the dictionary composes.
+- [`swift-dictionary`](https://github.com/swift-molecules/swift-dictionary) — the base `Dictionary<S>` ADT and the `Hash.Entry` element vocabulary.
+- [`swift-hash-table`](https://github.com/swift-molecules/swift-hash-table) — the `Hash.Indexed` position-index engine the entry column is built on.
+- [`swift-column`](https://github.com/swift-molecules/swift-column) — the column vocabulary (`Hash.Indexed`, `Column.Heap`, …) the dictionary composes.
 
 ---
 

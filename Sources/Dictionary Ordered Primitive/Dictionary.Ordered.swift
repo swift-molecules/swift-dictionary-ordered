@@ -1,14 +1,14 @@
 public import Buffer_Linear_Primitive
 public import Buffer_Primitive
-public import Column_Primitives
+public import Column
 public import Dictionary_Primitive
 public import Hash_Indexed_Primitive
-import Hash_Primitives
-public import Index_Primitives
+import Hash
+public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitives
+public import Memory_Heap
 public import Ownership_Shared_Primitive
-public import Storage_Contiguous_Primitives
+public import Storage_Contiguous
 public import Storage_Primitive
 
 @_documentation(visibility: public)
@@ -37,7 +37,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public init<K: Hash.Key & ~Copyable, V: ~Copyable>(
-        minimumCapacity: Index_Primitives.Index<Hash.Entry<K, V>>.Count = .zero
+        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
     )
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
         self.init(store: S(minimumCapacity: minimumCapacity))
@@ -45,7 +45,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public init<K: Hash.Key, V>(
-        minimumCapacity: Index_Primitives.Index<Hash.Entry<K, V>>.Count = .zero
+        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
     )
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         self.init(
@@ -57,7 +57,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public init<K: Hash.Key & ~Copyable, V: ~Copyable>(
-        minimumCapacity: Index_Primitives.Index<Hash.Entry<K, V>>.Count = .zero
+        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
     )
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         self.init(

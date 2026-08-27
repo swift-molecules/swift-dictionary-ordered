@@ -1,15 +1,15 @@
 public import Buffer_Linear_Primitive
 public import Buffer_Primitive
-public import Column_Primitives
+public import Column
 public import Dictionary_Ordered_Primitive
 public import Dictionary_Primitive
 public import Hash_Indexed_Primitive
-import Hash_Primitives
-public import Index_Primitives
+import Hash
+public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitives
+public import Memory_Heap
 public import Ownership_Shared_Primitive
-public import Storage_Contiguous_Primitives
+public import Storage_Contiguous
 public import Storage_Primitive
 
 extension __DictionaryOrdered where S: ~Copyable {
@@ -232,7 +232,7 @@ extension __DictionaryOrdered where S: ~Copyable {
     @inlinable
     public mutating func removeAll<K: Hash.Key, V>(keepingCapacity: Bool = true)
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
-        let capacity: Index_Primitives.Index<Hash.Entry<K, V>>.Count =
+        let capacity: Index.Index<Hash.Entry<K, V>>.Count =
             keepingCapacity ? store.capacity : .zero
         self.store = Ownership.Shared(
             Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: capacity)
@@ -244,7 +244,7 @@ extension __DictionaryOrdered where S: ~Copyable {
         keepingCapacity: Bool = true
     )
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
-        let capacity: Index_Primitives.Index<Hash.Entry<K, V>>.Count =
+        let capacity: Index.Index<Hash.Entry<K, V>>.Count =
             keepingCapacity ? store.capacity : .zero
         self.store = Ownership.Shared(
             Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: capacity)

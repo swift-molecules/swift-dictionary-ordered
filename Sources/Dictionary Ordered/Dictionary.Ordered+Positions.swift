@@ -1,16 +1,16 @@
 public import Buffer_Linear_Primitive
 public import Buffer_Primitive
-public import Column_Primitives
+public import Column
 public import Dictionary_Ordered_Primitive
 public import Dictionary_Primitive
 public import Hash_Indexed_Primitive
-import Hash_Primitives
-public import Index_Primitives
+import Hash
+public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitives
-import Ordinal_Primitives_Standard_Library_Integration
+public import Memory_Heap
+import Ordinal_Standard_Library_Integration
 public import Ownership_Shared_Primitive
-public import Storage_Contiguous_Primitives
+public import Storage_Contiguous
 public import Storage_Primitive
 
 extension __DictionaryOrdered where S: ~Copyable {
@@ -18,7 +18,7 @@ extension __DictionaryOrdered where S: ~Copyable {
     @inlinable
     public func index<K: Hash.Key & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
-    ) -> Index_Primitives.Index<Hash.Entry<K, V>>?
+    ) -> Index.Index<Hash.Entry<K, V>>?
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
         store.position(
             matching: key.hashValue,
@@ -32,7 +32,7 @@ extension __DictionaryOrdered where S: ~Copyable {
     @inlinable
     public func index<K: Hash.Key & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
-    ) -> Index_Primitives.Index<Hash.Entry<K, V>>?
+    ) -> Index.Index<Hash.Entry<K, V>>?
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         store.withColumn { column in
             column.position(
@@ -50,7 +50,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func key<K: Hash.Key, V: ~Copyable>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> K
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
         precondition(
@@ -62,7 +62,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func key<K: Hash.Key, V: ~Copyable>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> K
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         store.withColumn { column in
@@ -76,7 +76,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func value<K: Hash.Key & ~Copyable, V>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> V
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
         precondition(
@@ -88,7 +88,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func value<K: Hash.Key & ~Copyable, V>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> V
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         store.withColumn { column in
@@ -102,7 +102,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func entry<K: Hash.Key, V>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> (key: K, value: V)
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
         precondition(
@@ -114,7 +114,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func entry<K: Hash.Key, V>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>
+        at position: Index.Index<Hash.Entry<K, V>>
     ) -> (key: K, value: V)
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
         store.withColumn { column in
@@ -128,7 +128,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>,
+        at position: Index.Index<Hash.Entry<K, V>>,
         _ body: (borrowing V) -> R
     ) -> R
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
@@ -141,7 +141,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>,
+        at position: Index.Index<Hash.Entry<K, V>>,
         _ body: (borrowing V) -> R
     ) -> R
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
@@ -159,7 +159,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>,
+        at position: Index.Index<Hash.Entry<K, V>>,
         _ body: (inout V) -> R
     ) -> R
     where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
@@ -172,7 +172,7 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index_Primitives.Index<Hash.Entry<K, V>>,
+        at position: Index.Index<Hash.Entry<K, V>>,
         _ body: (inout V) -> R
     ) -> R
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
