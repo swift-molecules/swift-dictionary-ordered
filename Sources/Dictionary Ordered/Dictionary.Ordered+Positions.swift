@@ -7,7 +7,7 @@ public import Hash_Indexed_Primitive
 import Hash
 public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap
+public import Memory
 import Ordinal_Standard_Library_Integration
 public import Ownership_Shared_Primitive
 public import Storage_Contiguous
