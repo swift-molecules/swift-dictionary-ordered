@@ -1,5 +1,5 @@
 public import Index
-public import Store_Protocol
+public import Store
 
 extension __DictionaryOrdered where S: Store.`Protocol` & ~Copyable {
 

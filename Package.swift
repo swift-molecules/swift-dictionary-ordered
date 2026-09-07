@@ -139,7 +139,7 @@ let package = Package(
                 ),
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Store Protocol", package: "swift-storage"),
-                .product(name: "Buffer Protocol", package: "swift-buffer"),
+                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Ordinal Standard Library Integration",
                     package: "swift-ordinal"

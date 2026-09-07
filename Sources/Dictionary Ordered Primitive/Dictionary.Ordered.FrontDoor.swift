@@ -1,5 +1,5 @@
 public import Buffer_Linear_Primitive
-public import Buffer_Protocol
+public import Buffer
 public import Column
 public import Dictionary_Primitive
 public import Hash_Indexed_Primitive
@@ -8,7 +8,7 @@ public import Memory_Allocator_Primitive
 public import Memory
 public import Ownership_Shared_Primitive
 public import Storage_Contiguous
-public import Store_Protocol
+public import Store
 
 extension __Dictionary where S: Store.`Protocol` & ~Copyable, S.Element: Hash.Key {
 
