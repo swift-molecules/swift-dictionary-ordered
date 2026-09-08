@@ -1,16 +1,16 @@
 public import Buffer_Linear_Primitive
-public import Buffer_Primitive
+public import Buffer
 public import Column
 public import Dictionary_Ordered_Primitive
-public import Dictionary_Primitive
+public import Dictionary
 public import Hash_Indexed_Primitive
 import Hash
 public import Index
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
-public import Storage_Contiguous
-public import Storage_Primitive
+public import Storage_Memory
+public import Storage
 
 extension __DictionaryOrdered where S: ~Copyable {
 

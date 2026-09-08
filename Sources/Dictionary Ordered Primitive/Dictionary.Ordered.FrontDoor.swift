@@ -1,13 +1,13 @@
 public import Buffer_Linear_Primitive
 public import Buffer
 public import Column
-public import Dictionary_Primitive
+public import Dictionary
 public import Hash_Indexed_Primitive
 import Hash
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
-public import Storage_Contiguous
+public import Storage_Memory
 public import Store
 
 extension __Dictionary where S: Store.`Protocol` & ~Copyable, S.Element: Hash.Key {

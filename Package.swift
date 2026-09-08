@@ -24,6 +24,11 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-molecules/swift-storage-memory.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-atoms/swift-store.git",
+            branch: "main"
+        ),
         .package(
             url: "https://github.com/swift-molecules/swift-dictionary.git",
             branch: "main"
@@ -49,7 +54,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-buffer.git",
+            url: "https://github.com/swift-atoms/swift-buffer.git",
             branch: "main"
         ),
         .package(
@@ -57,7 +62,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-storage.git",
+            url: "https://github.com/swift-atoms/swift-storage.git",
             branch: "main"
         ),
         .package(
@@ -83,7 +88,7 @@ let package = Package(
         .target(
             name: "Dictionary Ordered Primitive",
             dependencies: [
-                .product(name: "Dictionary Primitive", package: "swift-dictionary"),
+                .product(name: "Dictionary", package: "swift-dictionary"),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash", package: "swift-hash"),
                 .product(
@@ -91,19 +96,19 @@ let package = Package(
                     package: "swift-ownership-shared"
                 ),
                 .product(name: "Column", package: "swift-column"),
-                .product(name: "Buffer Primitive", package: "swift-buffer"),
+                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
                 ),
-                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Storage", package: "swift-storage"),
                 .product(
-                    name: "Storage Contiguous",
-                    package: "swift-storage"
+                    name: "Storage Memory",
+                    package: "swift-storage-memory"
                 ),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocator Primitive",
+                    name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),
@@ -114,7 +119,7 @@ let package = Package(
             name: "Dictionary Ordered",
             dependencies: [
                 "Dictionary Ordered Primitive",
-                .product(name: "Dictionary Primitive", package: "swift-dictionary"),
+                .product(name: "Dictionary", package: "swift-dictionary"),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
                 .product(name: "Hash", package: "swift-hash"),
                 .product(
@@ -122,26 +127,26 @@ let package = Package(
                     package: "swift-ownership-shared"
                 ),
                 .product(name: "Column", package: "swift-column"),
-                .product(name: "Buffer Primitive", package: "swift-buffer"),
+                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Buffer Linear Primitive",
                     package: "swift-buffer-linear"
                 ),
-                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Storage", package: "swift-storage"),
                 .product(
-                    name: "Storage Contiguous",
-                    package: "swift-storage"
+                    name: "Storage Memory",
+                    package: "swift-storage-memory"
                 ),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocator Primitive",
+                    name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
                 .product(name: "Index", package: "swift-index"),
-                .product(name: "Store Protocol", package: "swift-storage"),
+                .product(name: "Store", package: "swift-store"),
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(
-                    name: "Ordinal Standard Library Integration",
+                    name: "Ordinal",
                     package: "swift-ordinal"
                 ),
             ]
@@ -160,15 +165,15 @@ let package = Package(
                     package: "swift-buffer"
                 ),
                 .product(
-                    name: "Hash Standard Library Integration",
+                    name: "Hash",
                     package: "swift-hash"
                 ),
                 .product(
-                    name: "Tagged Standard Library Integration",
+                    name: "Tagged",
                     package: "swift-tagged"
                 ),
                 .product(
-                    name: "Ordinal Standard Library Integration",
+                    name: "Ordinal",
                     package: "swift-ordinal"
                 ),
             ]
