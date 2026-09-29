@@ -1,19 +1,19 @@
 public import Buffer_Linear_Primitive
 public import Buffer
-public import Column
+public import Memory
+public import Memory_Allocator
+public import Storage
+
 public import Dictionary
 public import Hash_Indexed_Primitive
-import Hash
-public import Memory_Allocator
-public import Memory
+public import Hash_Table_Primitive
 public import Ownership_Shared_Primitive
-public import Storage_Memory
 public import Store
 
-extension __Dictionary where S: Store.`Protocol` & ~Copyable, S.Element: Hash.Key {
+extension __Dictionary where S: Store.`Protocol` & ~Copyable, S.Element: Swift.Hashable {
 
     public typealias Ordered =
-        __DictionaryOrdered<Hash.Indexed<Column.Heap<S.Element>>>
+        __DictionaryOrdered<Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<S.Element>>.Linear>>
 }
 
 extension __DictionaryOrdered

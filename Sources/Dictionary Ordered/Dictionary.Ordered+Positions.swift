@@ -1,27 +1,26 @@
 public import Buffer_Linear_Primitive
 public import Buffer
-public import Column
+public import Memory
+public import Memory_Allocator
+public import Storage
+
 public import Dictionary_Ordered_Primitive
 public import Dictionary
 public import Hash_Indexed_Primitive
-import Hash
+import Hash_Table_Primitive
 public import Index
-public import Memory_Allocator
-public import Memory
 import Ordinal
 public import Ownership_Shared_Primitive
-public import Storage_Memory
-public import Storage
 
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public func index<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public func index<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
-    ) -> Index.Index<Hash.Entry<K, V>>?
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    ) -> Index<Hash.Entry<K, V>>?
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         store.position(
-            matching: key.hashValue,
+            matching: Hash.Value(_unchecked: key.hashValue),
             context: key,
             equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                 candidate.key == probe
@@ -30,13 +29,13 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func index<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public func index<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
-    ) -> Index.Index<Hash.Entry<K, V>>?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    ) -> Index<Hash.Entry<K, V>>?
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             column.position(
-                matching: key.hashValue,
+                matching: Hash.Value(_unchecked: key.hashValue),
                 context: key,
                 equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                     candidate.key == probe
@@ -49,10 +48,10 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public func key<K: Hash.Key, V: ~Copyable>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func key<K: Swift.Hashable, V: ~Copyable>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> K
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         precondition(
             position < store.count.map(Ordinal.init),
             "ordered index domain: position out of bounds"
@@ -61,10 +60,10 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func key<K: Hash.Key, V: ~Copyable>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func key<K: Swift.Hashable, V: ~Copyable>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> K
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             precondition(
                 position < column.count.map(Ordinal.init),
@@ -75,10 +74,10 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func value<K: Hash.Key & ~Copyable, V>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func value<K: Swift.Hashable & ~Copyable, V>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> V
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         precondition(
             position < store.count.map(Ordinal.init),
             "ordered index domain: position out of bounds"
@@ -87,10 +86,10 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func value<K: Hash.Key & ~Copyable, V>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func value<K: Swift.Hashable & ~Copyable, V>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> V
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             precondition(
                 position < column.count.map(Ordinal.init),
@@ -101,10 +100,10 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func entry<K: Hash.Key, V>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func entry<K: Swift.Hashable, V>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> (key: K, value: V)
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         precondition(
             position < store.count.map(Ordinal.init),
             "ordered index domain: position out of bounds"
@@ -113,10 +112,10 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func entry<K: Hash.Key, V>(
-        at position: Index.Index<Hash.Entry<K, V>>
+    public func entry<K: Swift.Hashable, V>(
+        at position: Index<Hash.Entry<K, V>>
     ) -> (key: K, value: V)
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             precondition(
                 position < column.count.map(Ordinal.init),
@@ -127,11 +126,11 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index.Index<Hash.Entry<K, V>>,
+    public func withValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
+        at position: Index<Hash.Entry<K, V>>,
         _ body: (borrowing V) -> R
     ) -> R
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         precondition(
             position < store.count.map(Ordinal.init),
             "ordered index domain: position out of bounds"
@@ -140,11 +139,11 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index.Index<Hash.Entry<K, V>>,
+    public func withValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
+        at position: Index<Hash.Entry<K, V>>,
         _ body: (borrowing V) -> R
     ) -> R
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             precondition(
                 position < column.count.map(Ordinal.init),
@@ -158,11 +157,11 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index.Index<Hash.Entry<K, V>>,
+    public mutating func withMutableValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
+        at position: Index<Hash.Entry<K, V>>,
         _ body: (inout V) -> R
     ) -> R
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         precondition(
             position < store.count.map(Ordinal.init),
             "ordered index domain: position out of bounds"
@@ -171,11 +170,11 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
-        at position: Index.Index<Hash.Entry<K, V>>,
+    public mutating func withMutableValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
+        at position: Index<Hash.Entry<K, V>>,
         _ body: (inout V) -> R
     ) -> R
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withUnique { column in
             precondition(
                 position < column.count.map(Ordinal.init),

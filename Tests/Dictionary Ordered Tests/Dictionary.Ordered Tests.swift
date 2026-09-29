@@ -1,10 +1,13 @@
 import Buffer_Test_Support
-import Column
+import Memory
+import Memory_Allocator
+import Storage
+import Buffer
+import Buffer_Linear_Primitive
+
 import Dictionary_Ordered
 import Dictionary
 import Hash_Indexed_Primitive
-import Hash
-import Hash
 import Hash_Table_Test_Support
 import Index
 import Ordinal
@@ -12,11 +15,11 @@ import Ownership_Shared_Primitive
 import Tagged
 import Testing
 
-private typealias EntryColumn<K: Hash.Key & ~Copyable, V: ~Copyable> =
-    Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>
+private typealias EntryColumn<K: Swift.Hashable & ~Copyable, V: ~Copyable> =
+    Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>
 
-private typealias MoveOrdered<K: Hash.Key & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
-private typealias CoWOrdered<K: Hash.Key, V> = __DictionaryOrdered<
+private typealias MoveOrdered<K: Swift.Hashable & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
+private typealias CoWOrdered<K: Swift.Hashable, V> = __DictionaryOrdered<
     Ownership.Shared<Hash.Entry<K, V>, EntryColumn<K, V>>
 >
 
@@ -57,7 +60,7 @@ struct `Ordered Column Law Tests` {
     }
 }
 
-extension Hash.Indexed<Column.Heap<Hash.Entry<Int, Int>>> {
+extension Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<Int, Int>>>.Linear> {
     fileprivate borrowing func checkCoherence() -> [String] {
         Hash.Coherence.violations(self)
     }

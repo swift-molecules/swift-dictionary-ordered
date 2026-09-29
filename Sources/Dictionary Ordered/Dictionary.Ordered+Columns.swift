@@ -1,28 +1,29 @@
 public import Buffer_Linear_Primitive
 public import Buffer
-public import Column
+public import Memory
+public import Memory_Allocator
+public import Storage
+
 public import Dictionary_Ordered_Primitive
 public import Dictionary
 public import Hash_Indexed_Primitive
-import Hash
+import Hash_Table_Primitive
 public import Index
-public import Memory_Allocator
-public import Memory
 public import Ownership_Shared_Primitive
-public import Storage_Memory
-public import Storage
+public import Cardinal
+public import Tagged
 
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     @discardableResult
-    public mutating func insert<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func insert<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         key: consuming K,
         value: consuming V
     ) -> V?
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         if let slot = store.position(
-            matching: key.hashValue,
+            matching: Hash.Value(_unchecked: key.hashValue),
             context: key,
             equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                 candidate.key == probe
@@ -38,14 +39,14 @@ extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     @discardableResult
-    public mutating func insert<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func insert<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         key: consuming K,
         value: consuming V
     ) -> V?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withUnique(consuming: Hash.Entry(key: key, value: value)) { column, entry in
             if let slot = column.position(
-                matching: entry.hashValue,
+                matching: Hash.Value(_unchecked: entry.hashValue),
                 context: entry,
                 equals: {
                     (candidate: borrowing Hash.Entry<K, V>, probe: borrowing Hash.Entry<K, V>) in
@@ -66,10 +67,10 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public func contains<K: Hash.Key & ~Copyable, V: ~Copyable>(key: borrowing K) -> Bool
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    public func contains<K: Swift.Hashable & ~Copyable, V: ~Copyable>(key: borrowing K) -> Bool
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         store.position(
-            matching: key.hashValue,
+            matching: Hash.Value(_unchecked: key.hashValue),
             context: key,
             equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                 candidate.key == probe
@@ -78,11 +79,11 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func contains<K: Hash.Key & ~Copyable, V: ~Copyable>(key: borrowing K) -> Bool
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    public func contains<K: Swift.Hashable & ~Copyable, V: ~Copyable>(key: borrowing K) -> Bool
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             column.position(
-                matching: key.hashValue,
+                matching: Hash.Value(_unchecked: key.hashValue),
                 context: key,
                 equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                     candidate.key == probe
@@ -92,14 +93,14 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
+    public func withValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
         forKey key: borrowing K,
         _ body: (borrowing V) -> R
     ) -> R?
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         guard
             let slot = store.position(
-                matching: key.hashValue,
+                matching: Hash.Value(_unchecked: key.hashValue),
                 context: key,
                 equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                     candidate.key == probe
@@ -112,15 +113,15 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public func withValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
+    public func withValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
         forKey key: borrowing K,
         _ body: (borrowing V) -> R
     ) -> R?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column -> R? in
             guard
                 let slot = column.position(
-                    matching: key.hashValue,
+                    matching: Hash.Value(_unchecked: key.hashValue),
                     context: key,
                     equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                         candidate.key == probe
@@ -137,14 +138,14 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
+    public mutating func withMutableValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
         forKey key: borrowing K,
         _ body: (inout V) -> R
     ) -> R?
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         guard
             let slot = store.position(
-                matching: key.hashValue,
+                matching: Hash.Value(_unchecked: key.hashValue),
                 context: key,
                 equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                     candidate.key == probe
@@ -157,15 +158,15 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public mutating func withMutableValue<K: Hash.Key & ~Copyable, V: ~Copyable, R>(
+    public mutating func withMutableValue<K: Swift.Hashable & ~Copyable, V: ~Copyable, R>(
         forKey key: borrowing K,
         _ body: (inout V) -> R
     ) -> R?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withUnique { column -> R? in
             guard
                 let slot = column.position(
-                    matching: key.hashValue,
+                    matching: Hash.Value(_unchecked: key.hashValue),
                     context: key,
                     equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                         candidate.key == probe
@@ -182,13 +183,13 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public mutating func removeValue<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func removeValue<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
     ) -> V?
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         guard
             let entry = store.remove(
-                matching: key.hashValue,
+                matching: Hash.Value(_unchecked: key.hashValue),
                 context: key,
                 equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                     candidate.key == probe
@@ -201,14 +202,14 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public mutating func removeValue<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func removeValue<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         forKey key: borrowing K
     ) -> V?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withUnique { column -> V? in
             guard
                 let entry = column.remove(
-                    matching: key.hashValue,
+                    matching: Hash.Value(_unchecked: key.hashValue),
                     context: key,
                     equals: { (candidate: borrowing Hash.Entry<K, V>, probe: borrowing K) in
                         candidate.key == probe
@@ -222,32 +223,32 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public mutating func removeAll<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func removeAll<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         keepingCapacity: Bool = true
     )
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         store.removeAll(keepingCapacity: keepingCapacity)
     }
 
     @inlinable
-    public mutating func removeAll<K: Hash.Key, V>(keepingCapacity: Bool = true)
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
-        let capacity: Index.Index<Hash.Entry<K, V>>.Count =
+    public mutating func removeAll<K: Swift.Hashable, V>(keepingCapacity: Bool = true)
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
+        let capacity: Tagged<Hash.Entry<K, V>, Cardinal> =
             keepingCapacity ? store.capacity : .zero
         self.store = Ownership.Shared(
-            Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: capacity)
+            Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>(minimumCapacity: capacity)
         )
     }
 
     @inlinable
-    public mutating func removeAll<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public mutating func removeAll<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         keepingCapacity: Bool = true
     )
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
-        let capacity: Index.Index<Hash.Entry<K, V>>.Count =
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
+        let capacity: Tagged<Hash.Entry<K, V>, Cardinal> =
             keepingCapacity ? store.capacity : .zero
         self.store = Ownership.Shared(
-            Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: capacity)
+            Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>(minimumCapacity: capacity)
         )
     }
 }
@@ -255,18 +256,18 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public func forEach<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public func forEach<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         _ body: (borrowing K, borrowing V) -> Void
     )
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         store.forEach { entry in body(entry.key, entry.value) }
     }
 
     @inlinable
-    public func forEach<K: Hash.Key & ~Copyable, V: ~Copyable>(
+    public func forEach<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
         _ body: (borrowing K, borrowing V) -> Void
     )
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         store.withColumn { column in
             column.forEach { entry in body(entry.key, entry.value) }
         }
@@ -276,8 +277,8 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public func clone<K: Hash.Key, V>() -> Self
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    public func clone<K: Swift.Hashable, V>() -> Self
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         Self(store: store.clone())
     }
 }
@@ -285,8 +286,8 @@ extension __DictionaryOrdered where S: ~Copyable {
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public subscript<K: Hash.Key, V>(key: K) -> V?
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    public subscript<K: Swift.Hashable, V>(key: K) -> V?
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         get { withValue(forKey: key) { $0 } }
         set {
             if let newValue {
@@ -298,8 +299,8 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public mutating func set<K: Hash.Key, V>(_ key: K, _ value: V)
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    public mutating func set<K: Swift.Hashable, V>(_ key: K, _ value: V)
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         insert(key: key, value: value)
     }
 }

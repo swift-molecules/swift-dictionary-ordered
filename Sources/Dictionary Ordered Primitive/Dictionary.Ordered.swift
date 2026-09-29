@@ -1,15 +1,17 @@
 public import Buffer_Linear_Primitive
 public import Buffer
-public import Column
+public import Memory
+public import Memory_Allocator
+public import Storage
+
 public import Dictionary
 public import Hash_Indexed_Primitive
-import Hash
+public import Hash_Table_Primitive
 public import Index
-public import Memory_Allocator
-public import Memory
 public import Ownership_Shared_Primitive
-public import Storage_Memory
-public import Storage
+public import Cardinal
+public import Tagged
+public import Memory_Allocator_Protocol
 
 @_documentation(visibility: public)
 @frozen
@@ -36,33 +38,33 @@ extension __DictionaryOrdered: Sendable where S: Sendable & ~Copyable {}
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public init<K: Hash.Key & ~Copyable, V: ~Copyable>(
-        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
+    public init<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
+        minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
-    where S == Hash.Indexed<Column.Heap<Hash.Entry<K, V>>> {
+    where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
         self.init(store: S(minimumCapacity: minimumCapacity))
     }
 
     @inlinable
-    public init<K: Hash.Key, V>(
-        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
+    public init<K: Swift.Hashable, V>(
+        minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         self.init(
             store: Ownership.Shared(
-                Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: minimumCapacity)
+                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>(minimumCapacity: minimumCapacity)
             )
         )
     }
 
     @inlinable
-    public init<K: Hash.Key & ~Copyable, V: ~Copyable>(
-        minimumCapacity: Index.Index<Hash.Entry<K, V>>.Count = .zero
+    public init<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
+        minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
-    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>> {
+    where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
         self.init(
             store: Ownership.Shared(
-                Hash.Indexed<Column.Heap<Hash.Entry<K, V>>>(minimumCapacity: minimumCapacity)
+                Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>(minimumCapacity: minimumCapacity)
             )
         )
     }
