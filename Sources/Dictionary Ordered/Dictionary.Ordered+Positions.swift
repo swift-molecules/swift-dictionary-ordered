@@ -2,6 +2,7 @@ public import Buffer_Linear_Primitive
 public import Buffer
 public import Memory
 public import Memory_Allocator
+public import Memory_Allocator_Protocol
 public import Storage
 
 public import Dictionary_Ordered_Primitive

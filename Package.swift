@@ -109,6 +109,7 @@ let package = Package(
         .target(
             name: "Dictionary Ordered",
             dependencies: [
+                .product(name: "Memory Allocator Protocol", package: "swift-memory-allocation"),
                 "Dictionary Ordered Primitive",
                 .product(name: "Dictionary", package: "swift-dictionary"),
                 .product(name: "Hash Indexed Primitive", package: "swift-hash-table"),
