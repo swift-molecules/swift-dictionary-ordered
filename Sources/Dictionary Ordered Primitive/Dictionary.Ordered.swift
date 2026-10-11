@@ -7,7 +7,7 @@ public import Storage
 public import Dictionary
 public import Hash_Indexed_Primitive
 public import Hash_Table_Primitive
-public import Index
+import Index
 public import Ownership_Shared_Primitive
 public import Cardinal
 public import Tagged
@@ -24,6 +24,9 @@ public struct __DictionaryOrdered<S: ~Copyable>: ~Copyable {
     public init(store: consuming S) {
         self.store = store
     }
+}
+
+extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
     public consuming func take() -> S {
@@ -38,7 +41,7 @@ extension __DictionaryOrdered: Sendable where S: Sendable & ~Copyable {}
 extension __DictionaryOrdered where S: ~Copyable {
 
     @inlinable
-    public init<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
+    public init<K: Swift::Hashable & ~Copyable, V: ~Copyable>(
         minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
     where S == Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear> {
@@ -46,7 +49,7 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public init<K: Swift.Hashable, V>(
+    public init<K: Swift::Hashable, V>(
         minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {
@@ -58,7 +61,7 @@ extension __DictionaryOrdered where S: ~Copyable {
     }
 
     @inlinable
-    public init<K: Swift.Hashable & ~Copyable, V: ~Copyable>(
+    public init<K: Swift::Hashable & ~Copyable, V: ~Copyable>(
         minimumCapacity: Tagged<Hash.Entry<K, V>, Cardinal> = .zero
     )
     where S == Ownership.Shared<Hash.Entry<K, V>, Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>> {

@@ -14,15 +14,15 @@ import Ownership_Shared_Primitive
 import Tagged
 import Testing
 
-private typealias EntryColumn<K: Swift.Hashable & ~Copyable, V: ~Copyable> =
+private typealias EntryColumn<K: Swift::Hashable & ~Copyable, V: ~Copyable> =
     Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>
 
-private typealias MoveOrdered<K: Swift.Hashable & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
-private typealias CoWOrdered<K: Swift.Hashable, V> = __DictionaryOrdered<
+private typealias MoveOrdered<K: Swift::Hashable & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
+private typealias CoWOrdered<K: Swift::Hashable, V> = __DictionaryOrdered<
     Ownership.Shared<Hash.Entry<K, V>, EntryColumn<K, V>>
 >
 
-private struct Key: Swift.Hashable {
+private struct Key: Swift::Hashable {
     let id: Int
     let group: Int
 }
@@ -55,7 +55,7 @@ private final class Value {
 
 private struct Reference {
     var entries: [(key: Int, group: Int, value: Int)] = []
-    var keys: Swift.Set<Int> = []
+    var keys: Swift::Set<Int> = []
     var graveyard: [(key: Int, group: Int)] = []
 }
 

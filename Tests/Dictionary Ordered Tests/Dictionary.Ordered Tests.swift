@@ -15,11 +15,11 @@ import Ownership_Shared_Primitive
 import Tagged
 import Testing
 
-private typealias EntryColumn<K: Swift.Hashable & ~Copyable, V: ~Copyable> =
+private typealias EntryColumn<K: Swift::Hashable & ~Copyable, V: ~Copyable> =
     Hash.Indexed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Hash.Entry<K, V>>>.Linear>
 
-private typealias MoveOrdered<K: Swift.Hashable & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
-private typealias CoWOrdered<K: Swift.Hashable, V> = __DictionaryOrdered<
+private typealias MoveOrdered<K: Swift::Hashable & ~Copyable, V: ~Copyable> = Dictionary<K, V>.Ordered
+private typealias CoWOrdered<K: Swift::Hashable, V> = __DictionaryOrdered<
     Ownership.Shared<Hash.Entry<K, V>, EntryColumn<K, V>>
 >
 

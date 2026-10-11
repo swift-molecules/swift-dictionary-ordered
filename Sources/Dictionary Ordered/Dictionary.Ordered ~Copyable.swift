@@ -1,6 +1,6 @@
 public import Buffer
 public import Dictionary_Ordered_Primitive
-public import Index
+import Index
 public import Store
 public import Cardinal
 public import Tagged
