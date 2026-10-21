@@ -1,8 +1,8 @@
 public import Buffer
+public import Cardinal
 public import Dictionary_Ordered_Primitive
 import Index
 public import Store
-public import Cardinal
 public import Tagged
 
 extension __DictionaryOrdered where S: ~Copyable, S: Store.`Protocol` & Buffer.`Protocol` {
