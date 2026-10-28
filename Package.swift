@@ -133,7 +133,6 @@ let package = Package(
                 ),
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Store", package: "swift-store"),
-                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Ordinal",
                     package: "swift-ordinal"
