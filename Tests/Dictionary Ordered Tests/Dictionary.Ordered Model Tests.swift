@@ -587,14 +587,18 @@ private func runFleetStream(seed: UInt64) -> Model.Verdict {
     return verdict
 }
 
-@Suite
-struct `Dictionary.Ordered Model` {
-    @Suite struct Unit {}
-    @Suite struct `Edge Case` {}
-    @Suite struct Integration {}
+enum `Dictionary.Ordered Model Tests` {}
+
+extension `Dictionary.Ordered Model Tests` {
+    @Suite
+    struct `Dictionary.Ordered Model` {
+        @Suite struct Unit {}
+        @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
+    }
 }
 
-extension `Dictionary.Ordered Model`.Integration {
+extension `Dictionary.Ordered Model Tests`.`Dictionary.Ordered Model`.Integration {
     @Test(arguments: Model.seeds(default: [0x02D1_C701, 0x02D1_C702]))
     func `direct stream: keyed and positional doors match the ordered reference`(seed: UInt64) {
         let verdict = runDirectStream(seed: seed)
@@ -608,7 +612,7 @@ extension `Dictionary.Ordered Model`.Integration {
     }
 }
 
-extension `Dictionary.Ordered Model`.Unit {
+extension `Dictionary.Ordered Model Tests`.`Dictionary.Ordered Model`.Unit {
     @Test
     func `the order contract: update keeps rank, removal shifts, reinsertion appends`() {
         let census = Model.Census()
@@ -636,7 +640,7 @@ extension `Dictionary.Ordered Model`.Unit {
     }
 }
 
-extension `Dictionary.Ordered Model`.`Edge Case` {
+extension `Dictionary.Ordered Model Tests`.`Dictionary.Ordered Model`.`Edge Case` {
 
     @Test
     func `forking after removeAll keeps both siblings independently mutable`() {
