@@ -9,10 +9,10 @@ import Index
 public import Memory
 public import Memory_Allocator
 public import Memory_Allocator_Protocol
+import Ordinal
 public import Ownership_Shared_Primitive
 public import Storage
 public import Tagged
-import Ordinal
 
 extension __DictionaryOrdered where S: ~Copyable {
 
