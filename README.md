@@ -5,6 +5,7 @@ Use this package when you need a hash-keyed map whose entries keep the order the
 ## Laws
 
 - Iteration order is insertion order. `forEach` visits entries by ascending rank, and `index(forKey:)` returns that rank, from zero up to `count`.
+- A copyable dictionary of copyable entries is a `Swift.Sequence` of `Hash.Entry`, by ascending rank. Its iterator holds the copy it was made from, so a later mutation of the dictionary does not reach it.
 - Inserting a key that is already present replaces only its value: the stored key and its rank stay put, and the old value is returned. `withMutableValue` and the keyed subscript setter likewise keep the rank.
 - Removing an entry moves every later entry down one rank, so a rank you hold becomes stale after any removal. Inserting a removed key again puts it at the end.
 - Assigning `nil` through the keyed subscript removes the key.

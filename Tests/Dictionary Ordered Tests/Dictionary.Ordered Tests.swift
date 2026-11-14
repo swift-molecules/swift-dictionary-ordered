@@ -442,3 +442,46 @@ extension `Dictionary.Ordered Tests` {
 }
 
 private func requireSendable<T: Sendable & ~Copyable>(_ value: borrowing T) {}
+
+extension `Dictionary.Ordered Tests` {
+    @Suite
+    struct `Sequence Tests` {
+
+        @Test
+        func `iteration visits every entry once, in insertion order`() {
+            var map = CoWOrdered<String, Int>()
+            map.insert(key: "c", value: 3)
+            map.insert(key: "a", value: 1)
+            map.insert(key: "b", value: 2)
+            map.insert(key: "a", value: 10)
+            #expect(map.map(\.key) == ["c", "a", "b"])
+            #expect(map.map(\.value) == [3, 10, 2])
+            #expect(map.underestimatedCount == 3)
+        }
+
+        @Test
+        func `iteration after a removal skips the removed entry and keeps the order`() {
+            var map = CoWOrdered<String, Int>()
+            for (key, value) in [("x", 1), ("y", 2), ("z", 3)] {
+                map.insert(key: key, value: value)
+            }
+            _ = map.removeValue(forKey: "y")
+            #expect(map.map(\.key) == ["x", "z"])
+        }
+
+        @Test
+        func `an iterator sees the entries of the copy it was made from`() {
+            var map = CoWOrdered<String, Int>()
+            map.insert(key: "x", value: 1)
+            var iterator = map.makeIterator()
+            map.insert(key: "y", value: 2)
+            #expect(iterator.next()?.key == "x")
+            #expect(iterator.next() == nil)
+        }
+
+        @Test
+        func `an empty dictionary iterates nothing`() {
+            #expect(Array(CoWOrdered<Int, Int>()).isEmpty)
+        }
+    }
+}
