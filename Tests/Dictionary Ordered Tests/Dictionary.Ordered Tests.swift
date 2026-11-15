@@ -485,3 +485,43 @@ extension `Dictionary.Ordered Tests` {
         }
     }
 }
+
+extension `Dictionary.Ordered Tests` {
+    @Suite
+    struct `Rearranging Tests` {
+
+        @Test
+        func `removeAll(where:) removes the matching entries and keeps the order of the rest`() {
+            var map = CoWOrdered<String, Int>()
+            for (key, value) in [("a", 1), ("b", 2), ("c", 3), ("d", 4)] {
+                map.insert(key: key, value: value)
+            }
+            let copy = map
+            map.removeAll { _, value in value % 2 == 0 }
+            #expect(map.map(\.key) == ["a", "c"])
+            #expect(copy.map(\.key) == ["a", "b", "c", "d"])
+        }
+
+        @Test
+        func `inserting a new key at a rank puts it there and moves the later entries up`() {
+            var map = CoWOrdered<String, Int>()
+            for (key, value) in [("a", 1), ("b", 2), ("c", 3)] {
+                map.insert(key: key, value: value)
+            }
+            #expect(map.insert(key: "x", value: 9, atRank: 1) == nil)
+            #expect(map.map(\.key) == ["a", "x", "b", "c"])
+            #expect(map["x"] == 9)
+        }
+
+        @Test
+        func `inserting at a rank past the end appends, and an existing key keeps its rank`() {
+            var map = CoWOrdered<String, Int>()
+            map.insert(key: "a", value: 1)
+            map.insert(key: "b", value: 2, atRank: 5)
+            #expect(map.map(\.key) == ["a", "b"])
+            #expect(map.insert(key: "a", value: 10, atRank: 1) == 1)
+            #expect(map.map(\.key) == ["a", "b"])
+            #expect(map["a"] == 10)
+        }
+    }
+}
